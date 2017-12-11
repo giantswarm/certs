@@ -62,16 +62,23 @@ type Searcher struct {
 
 func (s *Searcher) SearchCluster(clusterID string) (Cluster, error) {
 	var cluster Cluster
-	var err error
 
-	err = s.searchError(&cluster.APIServer, clusterID, apiCert, err)
-	err = s.searchError(&cluster.CalicoClient, clusterID, calicoCert, err)
-	err = s.searchError(&cluster.EtcdServer, clusterID, etcdCert, err)
-	err = s.searchError(&cluster.ServiceAccount, clusterID, serviceAccountCert, err)
-	err = s.searchError(&cluster.Worker, clusterID, workerCert, err)
+	certificates := []struct {
+		TLS  *TLS
+		Cert cert
+	}{
+		{TLS: &cluster.APIServer, Cert: apiCert},
+		{TLS: &cluster.CalicoClient, Cert: calicoCert},
+		{TLS: &cluster.EtcdServer, Cert: etcdCert},
+		{TLS: &cluster.ServiceAccount, Cert: serviceAccountCert},
+		{TLS: &cluster.Worker, Cert: workerCert},
+	}
 
-	if err != nil {
-		return Cluster{}, microerror.Mask(err)
+	for _, c := range certificates {
+		err := s.search(c.TLS, clusterID, c.Cert)
+		if err != nil {
+			return Cluster{}, microerror.Mask(err)
+		}
 	}
 
 	return cluster, nil
@@ -79,13 +86,20 @@ func (s *Searcher) SearchCluster(clusterID string) (Cluster, error) {
 
 func (s *Searcher) SearchMonitoring(clusterID string) (Monitoring, error) {
 	var monitoring Monitoring
-	var err error
 
-	err = s.searchError(&monitoring.KubeStateMetrics, clusterID, kubeStateMetricsCert, err)
-	err = s.searchError(&monitoring.Prometheus, clusterID, prometheusCert, err)
+	certificates := []struct {
+		TLS  *TLS
+		Cert cert
+	}{
+		{TLS: &monitoring.KubeStateMetrics, Cert: kubeStateMetricsCert},
+		{TLS: &monitoring.Prometheus, Cert: prometheusCert},
+	}
 
-	if err != nil {
-		return Monitoring{}, microerror.Mask(err)
+	for _, c := range certificates {
+		err := s.search(c.TLS, clusterID, c.Cert)
+		if err != nil {
+			return Monitoring{}, microerror.Mask(err)
+		}
 	}
 
 	return monitoring, nil
