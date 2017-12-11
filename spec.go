@@ -1,4 +1,4 @@
-package certificates
+package certs
 
 type Interface interface {
 	SearchCluster(clusterID string) (Cluster, error)
