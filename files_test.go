@@ -5,7 +5,7 @@ import "testing"
 func Test_NewFilesCluster(t *testing.T) {
 	files := NewFilesCluster(Cluster{})
 
-	// Make sure all paths in files are unique.
+	// Make sure all paths are unique.
 
 	set := map[string]struct{}{}
 
