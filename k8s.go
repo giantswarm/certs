@@ -27,6 +27,7 @@ type Cert string
 const (
 	APICert            Cert = "api"
 	CalicoCert         Cert = "calico"
+	ChartOperatorCert  Cert = "chart-operator"
 	EtcdCert           Cert = "etcd"
 	FlanneldCert       Cert = "flanneld"
 	NodeOperatorCert   Cert = "node-operator"
@@ -39,6 +40,7 @@ const (
 var AllCerts = []Cert{
 	APICert,
 	CalicoCert,
+	ChartOperatorCert,
 	EtcdCert,
 	FlanneldCert,
 	NodeOperatorCert,

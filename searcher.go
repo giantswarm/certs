@@ -96,6 +96,26 @@ func (s *Searcher) SearchDraining(clusterID string) (Draining, error) {
 	return draining, nil
 }
 
+func (s *Searcher) SearchGuestResources(clusterID string) (GuestResources, error) {
+	var guestResources GuestResources
+
+	certificates := []struct {
+		TLS  *TLS
+		Cert Cert
+	}{
+		{TLS: &guestResources.ChartOperator, Cert: ChartOperatorCert},
+	}
+
+	for _, c := range certificates {
+		err := s.search(c.TLS, clusterID, c.Cert)
+		if err != nil {
+			return GuestResources{}, microerror.Mask(err)
+		}
+	}
+
+	return guestResources, nil
+}
+
 func (s *Searcher) SearchMonitoring(clusterID string) (Monitoring, error) {
 	var monitoring Monitoring
 

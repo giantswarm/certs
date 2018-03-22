@@ -19,6 +19,10 @@ func (s *Searcher) SearchDraining(clusterID string) (certs.Draining, error) {
 	return certs.Draining{}, nil
 }
 
+func (s *Searcher) SearchGuestResources(clusterID string) (certs.GuestResources, error) {
+	return certs.GuestResources{}, nil
+}
+
 func (s *Searcher) SearchMonitoring(clusterID string) (certs.Monitoring, error) {
 	return certs.Monitoring{}, nil
 }

@@ -16,6 +16,10 @@ type Draining struct {
 	NodeOperator TLS
 }
 
+type GuestResources struct {
+	ChartOperator TLS
+}
+
 type Monitoring struct {
 	Prometheus       TLS
 	KubeStateMetrics TLS
