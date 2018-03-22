@@ -103,7 +103,7 @@ func (s *Searcher) SearchGuestResources(clusterID string) (GuestResources, error
 		TLS  *TLS
 		Cert Cert
 	}{
-		{TLS: &guestResources.ChartOperator, Cert: ChartOperatorCert},
+		{TLS: &guestResources.ClusterOperator, Cert: ClusterOperatorCert},
 	}
 
 	for _, c := range certificates {

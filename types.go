@@ -17,7 +17,7 @@ type Draining struct {
 }
 
 type GuestResources struct {
-	ChartOperator TLS
+	ClusterOperator TLS
 }
 
 type Monitoring struct {
