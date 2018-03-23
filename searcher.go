@@ -76,6 +76,26 @@ func (s *Searcher) SearchCluster(clusterID string) (Cluster, error) {
 	return cluster, nil
 }
 
+func (s *Searcher) SearchClusterOperator(clusterID string) (ClusterOperator, error) {
+	var clusterOperator ClusterOperator
+
+	certificates := []struct {
+		TLS  *TLS
+		Cert Cert
+	}{
+		{TLS: &clusterOperator.APIServer, Cert: ClusterOperatorCert},
+	}
+
+	for _, c := range certificates {
+		err := s.search(c.TLS, clusterID, c.Cert)
+		if err != nil {
+			return ClusterOperator{}, microerror.Mask(err)
+		}
+	}
+
+	return clusterOperator, nil
+}
+
 func (s *Searcher) SearchDraining(clusterID string) (Draining, error) {
 	var draining Draining
 
@@ -94,26 +114,6 @@ func (s *Searcher) SearchDraining(clusterID string) (Draining, error) {
 	}
 
 	return draining, nil
-}
-
-func (s *Searcher) SearchGuestResources(clusterID string) (GuestResources, error) {
-	var guestResources GuestResources
-
-	certificates := []struct {
-		TLS  *TLS
-		Cert Cert
-	}{
-		{TLS: &guestResources.ClusterOperator, Cert: ClusterOperatorCert},
-	}
-
-	for _, c := range certificates {
-		err := s.search(c.TLS, clusterID, c.Cert)
-		if err != nil {
-			return GuestResources{}, microerror.Mask(err)
-		}
-	}
-
-	return guestResources, nil
 }
 
 func (s *Searcher) SearchMonitoring(clusterID string) (Monitoring, error) {

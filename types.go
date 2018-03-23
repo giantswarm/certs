@@ -12,12 +12,12 @@ type Cluster struct {
 	EtcdServer     TLS
 }
 
-type Draining struct {
-	NodeOperator TLS
+type ClusterOperator struct {
+	APIServer TLS
 }
 
-type GuestResources struct {
-	ClusterOperator TLS
+type Draining struct {
+	NodeOperator TLS
 }
 
 type Monitoring struct {
