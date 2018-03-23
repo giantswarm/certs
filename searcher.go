@@ -83,7 +83,7 @@ func (s *Searcher) SearchClusterOperator(clusterID string) (ClusterOperator, err
 		TLS  *TLS
 		Cert Cert
 	}{
-		{TLS: &clusterOperator.APIServer, Cert: ClusterOperatorCert},
+		{TLS: &clusterOperator.APIServer, Cert: ClusterOperatorAPICert},
 	}
 
 	for _, c := range certificates {
