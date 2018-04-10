@@ -57,6 +57,21 @@ func newFilesClusterCommon(cluster Cluster) Files {
 			AbsolutePath: "/etc/kubernetes/ssl/calico/client-key.pem",
 			Data:         cluster.CalicoClient.Key,
 		},
+		// Temporary Etcd client keys reusing server keys.
+		// TODO Remove these when operator support for new flannel & calico
+		// specific etcd client keys has been rolled out.
+		{
+			AbsolutePath: "/etc/kubernetes/ssl/etcd/client-ca.pem",
+			Data:         cluster.EtcdServer.CA,
+		},
+		{
+			AbsolutePath: "/etc/kubernetes/ssl/etcd/client-crt.pem",
+			Data:         cluster.EtcdServer.Crt,
+		},
+		{
+			AbsolutePath: "/etc/kubernetes/ssl/etcd/client-key.pem",
+			Data:         cluster.EtcdServer.Key,
+		},
 		// Calico Etcd client.
 		{
 			AbsolutePath: "/etc/kubernetes/ssl/etcd/calico-client-ca.pem",
