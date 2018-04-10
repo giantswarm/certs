@@ -65,7 +65,9 @@ func (s *Searcher) SearchCluster(clusterID string) (Cluster, error) {
 	}{
 		{TLS: &cluster.APIServer, Cert: APICert},
 		{TLS: &cluster.CalicoClient, Cert: CalicoCert},
+		{TLS: &cluster.CalicoEtcdClient, Cert: CalicoEtcdClientCert},
 		{TLS: &cluster.EtcdServer, Cert: EtcdCert},
+		{TLS: &cluster.FlanneldEtcdClient, Cert: FlanneldEtcdClientCert},
 		{TLS: &cluster.ServiceAccount, Cert: ServiceAccountCert},
 		{TLS: &cluster.Worker, Cert: WorkerCert},
 	}

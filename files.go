@@ -57,19 +57,31 @@ func newFilesClusterCommon(cluster Cluster) Files {
 			AbsolutePath: "/etc/kubernetes/ssl/calico/client-key.pem",
 			Data:         cluster.CalicoClient.Key,
 		},
-		// Etcd client.
-		// TODO create separate etcd client certificates.
+		// Calico Etcd client.
 		{
-			AbsolutePath: "/etc/kubernetes/ssl/etcd/client-ca.pem",
-			Data:         cluster.EtcdServer.CA,
+			AbsolutePath: "/etc/kubernetes/ssl/etcd/calico-client-ca.pem",
+			Data:         cluster.CalicoEtcdClient.CA,
 		},
 		{
-			AbsolutePath: "/etc/kubernetes/ssl/etcd/client-crt.pem",
-			Data:         cluster.EtcdServer.Crt,
+			AbsolutePath: "/etc/kubernetes/ssl/etcd/calico-client-crt.pem",
+			Data:         cluster.CalicoEtcdClient.Crt,
 		},
 		{
-			AbsolutePath: "/etc/kubernetes/ssl/etcd/client-key.pem",
-			Data:         cluster.EtcdServer.Key,
+			AbsolutePath: "/etc/kubernetes/ssl/etcd/calico-client-key.pem",
+			Data:         cluster.CalicoEtcdClient.Key,
+		},
+		// Flanneld Etcd client.
+		{
+			AbsolutePath: "/etc/kubernetes/ssl/etcd/flanneld-client-ca.pem",
+			Data:         cluster.FlanneldEtcdClient.CA,
+		},
+		{
+			AbsolutePath: "/etc/kubernetes/ssl/etcd/flanneld-client-crt.pem",
+			Data:         cluster.FlanneldEtcdClient.Crt,
+		},
+		{
+			AbsolutePath: "/etc/kubernetes/ssl/etcd/flanneld-client-key.pem",
+			Data:         cluster.FlanneldEtcdClient.Key,
 		},
 	}
 }
