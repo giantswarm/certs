@@ -31,7 +31,6 @@ const (
 	ClusterOperatorAPICert Cert = "cluster-operator-api"
 	EtcdCert               Cert = "etcd"
 	FlanneldCert           Cert = "flanneld"
-	FlanneldEtcdClientCert Cert = "flanneld-etcd-client"
 	NodeOperatorCert       Cert = "node-operator"
 	PrometheusCert         Cert = "prometheus"
 	ServiceAccountCert     Cert = "service-account"
@@ -46,7 +45,6 @@ var AllCerts = []Cert{
 	ClusterOperatorAPICert,
 	EtcdCert,
 	FlanneldCert,
-	FlanneldEtcdClientCert,
 	NodeOperatorCert,
 	PrometheusCert,
 	ServiceAccountCert,

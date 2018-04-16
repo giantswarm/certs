@@ -85,19 +85,6 @@ func newFilesClusterCommon(cluster Cluster) Files {
 			AbsolutePath: "/etc/kubernetes/ssl/etcd/calico-client-key.pem",
 			Data:         cluster.CalicoEtcdClient.Key,
 		},
-		// Flanneld Etcd client.
-		{
-			AbsolutePath: "/etc/kubernetes/ssl/etcd/flanneld-client-ca.pem",
-			Data:         cluster.FlanneldEtcdClient.CA,
-		},
-		{
-			AbsolutePath: "/etc/kubernetes/ssl/etcd/flanneld-client-crt.pem",
-			Data:         cluster.FlanneldEtcdClient.Crt,
-		},
-		{
-			AbsolutePath: "/etc/kubernetes/ssl/etcd/flanneld-client-key.pem",
-			Data:         cluster.FlanneldEtcdClient.Key,
-		},
 	}
 }
 
