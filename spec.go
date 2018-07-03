@@ -14,3 +14,7 @@ type Interface interface {
 	// monitoring guest clusters.
 	SearchMonitoring(clusterID string) (Monitoring, error)
 }
+
+type TLSSearcher interface {
+	SearchTLS(clusterID string, cert Cert) (TLS, error)
+}
