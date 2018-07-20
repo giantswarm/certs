@@ -15,60 +15,58 @@ import (
 )
 
 const (
-	// watchTimeOut is the time to wait on watches against the Kubernetes API
-	// before giving up and throwing an error.
-	watchTimeOut = 90 * time.Second
+	// DefaultWatchTimeout is the time to wait on watches against the Kubernetes
+	// API before giving up and throwing an error.
+	DefaultWatchTimeout = 90 * time.Second
 )
 
 type Config struct {
-	// Dependencies.
-
 	K8sClient kubernetes.Interface
 	Logger    micrologger.Logger
-}
 
-func DefaultConfig() Config {
-	return Config{
-		// Dependencies.
-		K8sClient: nil,
-		Logger:    nil,
-	}
-}
-
-func NewSearcher(config Config) (*Searcher, error) {
-	// Dependencies.
-	if config.K8sClient == nil {
-		return nil, microerror.Maskf(invalidConfigError, "config.K8sClient must not be empty")
-	}
-	if config.Logger == nil {
-		return nil, microerror.Maskf(invalidConfigError, "config.Logger must not be empty")
-	}
-
-	s := &Searcher{
-		// Dependencies.
-		k8sClient: config.K8sClient,
-		logger:    config.Logger,
-	}
-
-	return s, nil
+	WatchTimeout time.Duration
 }
 
 type Searcher struct {
-	// Dependencies.
-
 	k8sClient kubernetes.Interface
 	logger    micrologger.Logger
+
+	watchTimeout time.Duration
+}
+
+func NewSearcher(config Config) (*Searcher, error) {
+	if config.K8sClient == nil {
+		return nil, microerror.Maskf(invalidConfigError, "%T.K8sClient must not be empty", config)
+	}
+	if config.Logger == nil {
+		return nil, microerror.Maskf(invalidConfigError, "%T.Logger must not be empty", config)
+	}
+
+	if config.WatchTimeout == 0 {
+		config.WatchTimeout = DefaultWatchTimeout
+	}
+
+	s := &Searcher{
+		k8sClient: config.K8sClient,
+		logger:    config.Logger,
+
+		watchTimeout: config.WatchTimeout,
+	}
+
+	return s, nil
 }
 
 func (s *Searcher) SearchCluster(clusterID string) (Cluster, error) {
 	var cluster Cluster
 
 	certificates := []struct {
-		TLS  *TLS
-		Cert Cert
+		TLS      *TLS
+		Cert     Cert
+		optional bool
 	}{
 		{TLS: &cluster.APIServer, Cert: APICert},
 		{TLS: &cluster.CalicoClient, Cert: CalicoCert},
+		{TLS: &cluster.CalicoEtcdClient, Cert: CalicoEtcdClientCert, optional: true},
 		{TLS: &cluster.EtcdServer, Cert: EtcdCert},
 		{TLS: &cluster.ServiceAccount, Cert: ServiceAccountCert},
 		{TLS: &cluster.Worker, Cert: WorkerCert},
@@ -77,11 +75,35 @@ func (s *Searcher) SearchCluster(clusterID string) (Cluster, error) {
 	for _, c := range certificates {
 		err := s.search(c.TLS, clusterID, c.Cert)
 		if err != nil {
-			return Cluster{}, microerror.Mask(err)
+			if c.optional {
+				s.logger.Log("level", "warning", "message", err.Error())
+			} else {
+				return Cluster{}, microerror.Mask(err)
+			}
 		}
 	}
 
 	return cluster, nil
+}
+
+func (s *Searcher) SearchClusterOperator(clusterID string) (ClusterOperator, error) {
+	var clusterOperator ClusterOperator
+
+	certificates := []struct {
+		TLS  *TLS
+		Cert Cert
+	}{
+		{TLS: &clusterOperator.APIServer, Cert: ClusterOperatorAPICert},
+	}
+
+	for _, c := range certificates {
+		err := s.search(c.TLS, clusterID, c.Cert)
+		if err != nil {
+			return ClusterOperator{}, microerror.Mask(err)
+		}
+	}
+
+	return clusterOperator, nil
 }
 
 func (s *Searcher) SearchDraining(clusterID string) (Draining, error) {
@@ -111,7 +133,6 @@ func (s *Searcher) SearchMonitoring(clusterID string) (Monitoring, error) {
 		TLS  *TLS
 		Cert Cert
 	}{
-		{TLS: &monitoring.KubeStateMetrics, Cert: KubeStateMetricsCert},
 		{TLS: &monitoring.Prometheus, Cert: PrometheusCert},
 	}
 
@@ -125,11 +146,15 @@ func (s *Searcher) SearchMonitoring(clusterID string) (Monitoring, error) {
 	return monitoring, nil
 }
 
-func (s *Searcher) searchError(tls *TLS, clusterID string, cert Cert, err error) error {
+func (s *Searcher) SearchTLS(clusterID string, cert Cert) (TLS, error) {
+	tls := &TLS{}
+
+	err := s.search(tls, clusterID, cert)
 	if err != nil {
-		return err
+		return TLS{}, microerror.Mask(err)
 	}
-	return s.search(tls, clusterID, cert)
+
+	return *tls, nil
 }
 
 func (s *Searcher) search(tls *TLS, clusterID string, cert Cert) error {
@@ -167,7 +192,7 @@ func (s *Searcher) search(tls *TLS, clusterID string, cert Cert) error {
 			case watch.Error:
 				return microerror.Maskf(executionError, "watching secrets, selector = %q: %v", selector, apierrors.FromObject(event.Object))
 			}
-		case <-time.After(watchTimeOut):
+		case <-time.After(s.watchTimeout):
 			return microerror.Maskf(timeoutError, "waiting secrets, selector = %q", selector)
 		}
 	}
