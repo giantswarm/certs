@@ -57,13 +57,15 @@ var AllCerts = []Cert{
 	WorkerCert,
 }
 
-// K8sSecretName returns Kubernetes Secret object name for the certificate name
-// and the guest cluster ID.
-func K8sSecretName(clusterID string, certificate Cert) string {
+// K8sName returns Kubernetes object name for the certificate name and
+// the guest cluster ID.
+func K8sName(clusterID string, certificate Cert) string {
 	return fmt.Sprintf("%s-%s", clusterID, certificate)
 }
 
-func K8sSecretLabels(clusterID string, certificate Cert) map[string]string {
+// K8sLabels returns labels for the Kubernetes  object for the certificate name
+// and the guest cluster ID.
+func K8sLabels(clusterID string, certificate Cert) map[string]string {
 	return map[string]string{
 		certificateLabel:       string(certificate),
 		clusterIDLabel:         clusterID,
