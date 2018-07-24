@@ -16,7 +16,6 @@ const (
 	// containing the certificate.
 	//
 	// TODO use certificateLabel instead when all cert secrets have it.
-	// https://github.com/giantswarm/fmt.
 	legacyCertificateLabel = "clusterComponent"
 	// legacyClusterIDLabel is the label used in the secret to identify a secret
 	// containing the certificate.
