@@ -5,17 +5,24 @@ import "fmt"
 // These constants are used when filtering the secrets, to only retrieve the
 // ones we are interested in.
 const (
-	// componentLabel is the label used in the secret to identify a secret
+	// certificateLabel is the label used in the secret to identify a secret
 	// containing the certificate.
-	//
-	// TODO replace with "giantswarm.io/certificate" and add to
-	// https://github.com/giantswarm/fmt.
-	certficateLabel = "clusterComponent"
+	certificateLabel = "giantswarm.io/certificate"
 	// clusterIDLabel is the label used in the secret to identify a secret
 	// containing the certificate.
+	clusterIDLabel = "giantswarm.io/cluster-id"
+
+	// legacyCertificateLabel is the label used in the secret to identify a secret
+	// containing the certificate.
 	//
-	// TODO replace with "giantswarm.io/cluster-id"
-	clusterIDLabel = "clusterID"
+	// TODO use certificateLabel instead when all cert secrets have it.
+	// https://github.com/giantswarm/fmt.
+	legacyCertificateLabel = "clusterComponent"
+	// legacyClusterIDLabel is the label used in the secret to identify a secret
+	// containing the certificate.
+	//
+	// TODO use clusterIDLabel instead when all cert secrets have it.
+	legacyClusterIDLabel = "clusterID"
 
 	SecretNamespace = "default"
 )
@@ -53,6 +60,15 @@ var AllCerts = []Cert{
 
 // K8sSecretName returns Kubernetes Secret object name for the certificate name
 // and the guest cluster ID.
-func K8sSecretName(clusterID, certificate Cert) string {
+func K8sSecretName(clusterID string, certificate Cert) string {
 	return fmt.Sprintf("%s-%s", clusterID, certificate)
+}
+
+func K8sSecretLabels(clusterID string, certificate Cert) map[string]string {
+	return map[string]string{
+		certificateLabel:       string(certificate),
+		clusterIDLabel:         clusterID,
+		legacyCertificateLabel: string(certificate),
+		legacyClusterIDLabel:   clusterID,
+	}
 }
