@@ -29,6 +29,10 @@ const (
 // Cert is a certificate name.
 type Cert string
 
+func (c Cert) String() string {
+	return string(c)
+}
+
 // These constants used as Cert parsing a secret received from the API.
 const (
 	APICert                Cert = "api"
