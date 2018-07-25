@@ -10,7 +10,7 @@ const (
 	certificateLabel = "giantswarm.io/certificate"
 	// clusterIDLabel is the label used in the secret to identify a secret
 	// containing the certificate.
-	clusterIDLabel = "giantswarm.io/cluster-id"
+	clusterIDLabel = "giantswarm.io/cluster"
 
 	// legacyCertificateLabel is the label used in the secret to identify a secret
 	// containing the certificate.
