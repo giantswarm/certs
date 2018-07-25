@@ -8,9 +8,9 @@ const (
 	// certificateLabel is the label used in the secret to identify a secret
 	// containing the certificate.
 	certificateLabel = "giantswarm.io/certificate"
-	// clusterIDLabel is the label used in the secret to identify a secret
+	// clusterLabel is the label used in the secret to identify a secret
 	// containing the certificate.
-	clusterIDLabel = "giantswarm.io/cluster-id"
+	clusterLabel = "giantswarm.io/cluster"
 
 	// legacyCertificateLabel is the label used in the secret to identify a secret
 	// containing the certificate.
@@ -72,7 +72,7 @@ func K8sName(clusterID string, certificate Cert) string {
 func K8sLabels(clusterID string, certificate Cert) map[string]string {
 	return map[string]string{
 		certificateLabel:       string(certificate),
-		clusterIDLabel:         clusterID,
+		clusterLabel:           clusterID,
 		legacyCertificateLabel: string(certificate),
 		legacyClusterIDLabel:   clusterID,
 	}
