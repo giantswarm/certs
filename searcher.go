@@ -99,6 +99,11 @@ func (s *Searcher) SearchCluster(clusterID string) (Cluster, error) {
 		})
 	}
 
+	err := g.Wait()
+	if err != nil {
+		return Cluster{}, microerror.Mask(err)
+	}
+
 	return cluster, nil
 }
 
@@ -133,6 +138,11 @@ func (s *Searcher) SearchClusterOperator(clusterID string) (ClusterOperator, err
 
 			return nil
 		})
+	}
+
+	err := g.Wait()
+	if err != nil {
+		return ClusterOperator{}, microerror.Mask(err)
 	}
 
 	return clusterOperator, nil
@@ -171,6 +181,11 @@ func (s *Searcher) SearchDraining(clusterID string) (Draining, error) {
 		})
 	}
 
+	err := g.Wait()
+	if err != nil {
+		return Draining{}, microerror.Mask(err)
+	}
+
 	return draining, nil
 }
 
@@ -205,6 +220,11 @@ func (s *Searcher) SearchMonitoring(clusterID string) (Monitoring, error) {
 
 			return nil
 		})
+	}
+
+	err := g.Wait()
+	if err != nil {
+		return Monitoring{}, microerror.Mask(err)
 	}
 
 	return monitoring, nil
