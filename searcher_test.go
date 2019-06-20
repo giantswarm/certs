@@ -25,8 +25,8 @@ func Test_fillTLSFromSecret(t *testing.T) {
 			Secret: &corev1.Secret{
 				ObjectMeta: metav1.ObjectMeta{
 					Labels: map[string]string{
-						"clusterID":        "eggs2",
-						"clusterComponent": "etcd",
+						"giantswarm.io/cluster":     "eggs2",
+						"giantswarm.io/certificate": "etcd",
 					},
 				},
 				Data: map[string][]byte{
@@ -49,8 +49,8 @@ func Test_fillTLSFromSecret(t *testing.T) {
 			Secret: &corev1.Secret{
 				ObjectMeta: metav1.ObjectMeta{
 					Labels: map[string]string{
-						"clusterID":        "eggs2",
-						"clusterComponent": "etcd",
+						"giantswarm.io/cluster":     "eggs2",
+						"giantswarm.io/certificate": "etcd",
 					},
 				},
 				Data: map[string][]byte{
@@ -69,8 +69,8 @@ func Test_fillTLSFromSecret(t *testing.T) {
 			Secret: &corev1.Secret{
 				ObjectMeta: metav1.ObjectMeta{
 					Labels: map[string]string{
-						"clusterID":        "eggs2",
-						"clusterComponent": "etcd",
+						"giantswarm.io/cluster":     "eggs2",
+						"giantswarm.io/certificate": "etcd",
 					},
 				},
 				Data: map[string][]byte{
@@ -89,8 +89,8 @@ func Test_fillTLSFromSecret(t *testing.T) {
 			Secret: &corev1.Secret{
 				ObjectMeta: metav1.ObjectMeta{
 					Labels: map[string]string{
-						"clusterID":        "eggs2",
-						"clusterComponent": "etcd",
+						"giantswarm.io/cluster":     "eggs2",
+						"giantswarm.io/certificate": "etcd",
 					},
 				},
 				Data: map[string][]byte{
@@ -108,8 +108,8 @@ func Test_fillTLSFromSecret(t *testing.T) {
 			Secret: &corev1.Secret{
 				ObjectMeta: metav1.ObjectMeta{
 					Labels: map[string]string{
-						"clusterID":        "eggs2",
-						"clusterComponent": "etcd",
+						"giantswarm.io/cluster":     "eggs2",
+						"giantswarm.io/certificate": "etcd",
 					},
 				},
 				Data: map[string][]byte{
@@ -127,8 +127,8 @@ func Test_fillTLSFromSecret(t *testing.T) {
 			Secret: &corev1.Secret{
 				ObjectMeta: metav1.ObjectMeta{
 					Labels: map[string]string{
-						"clusterID":        "eggs2",
-						"clusterComponent": "etcd",
+						"giantswarm.io/cluster":     "eggs2",
+						"giantswarm.io/certificate": "etcd",
 					},
 				},
 				Data: map[string][]byte{

@@ -291,7 +291,7 @@ func (s *Searcher) SearchTLS(clusterID string, cert Cert) (TLS, error) {
 func (s *Searcher) search(tls *TLS, clusterID string, cert Cert) (*corev1.Secret, error) {
 	// Select only secrets that match the given certificate and the given
 	// cluster clusterID.
-	selector := fmt.Sprintf("%s=%s, %s=%s", legacyCertificateLabel, cert, legacyClusterIDLabel, clusterID)
+	selector := fmt.Sprintf("%s=%s, %s=%s", certificateLabel, cert, clusterLabel, clusterID)
 
 	watcher, err := s.k8sClient.Core().Secrets(SecretNamespace).Watch(metav1.ListOptions{
 		LabelSelector: selector,
@@ -330,11 +330,11 @@ func (s *Searcher) search(tls *TLS, clusterID string, cert Cert) (*corev1.Secret
 }
 
 func fillTLSFromSecret(tls *TLS, secret *corev1.Secret, clusterID string, cert Cert) error {
-	gotClusterID := secret.Labels[legacyClusterIDLabel]
+	gotClusterID := secret.Labels[clusterLabel]
 	if clusterID != gotClusterID {
 		return microerror.Maskf(invalidSecretError, "expected clusterID = %q, got %q", clusterID, gotClusterID)
 	}
-	gotcert := secret.Labels[legacyCertificateLabel]
+	gotcert := secret.Labels[certificateLabel]
 	if string(cert) != gotcert {
 		return microerror.Maskf(invalidSecretError, "expected certificate = %q, got %q", cert, gotcert)
 	}

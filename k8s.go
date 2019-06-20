@@ -12,17 +12,6 @@ const (
 	// containing the certificate.
 	clusterLabel = "giantswarm.io/cluster"
 
-	// legacyCertificateLabel is the label used in the secret to identify a secret
-	// containing the certificate.
-	//
-	// TODO use certificateLabel instead when all cert secrets have it.
-	legacyCertificateLabel = "clusterComponent"
-	// legacyClusterIDLabel is the label used in the secret to identify a secret
-	// containing the certificate.
-	//
-	// TODO use clusterIDLabel instead when all cert secrets have it.
-	legacyClusterIDLabel = "clusterID"
-
 	SecretNamespace = "default"
 )
 
@@ -71,9 +60,7 @@ func K8sName(clusterID string, certificate Cert) string {
 // and the guest cluster ID.
 func K8sLabels(clusterID string, certificate Cert) map[string]string {
 	return map[string]string{
-		certificateLabel:       string(certificate),
-		clusterLabel:           clusterID,
-		legacyCertificateLabel: string(certificate),
-		legacyClusterIDLabel:   clusterID,
+		certificateLabel: string(certificate),
+		clusterLabel:     clusterID,
 	}
 }
