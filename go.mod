@@ -3,11 +3,9 @@ module github.com/giantswarm/certs
 go 1.13
 
 require (
-	github.com/giantswarm/microerror v0.1.1-0.20200205143715-01b76f66cae6
-	github.com/giantswarm/micrologger v0.0.0-20200205144836-079154bcae45
-	github.com/go-kit/kit v0.10.0 // indirect
+	github.com/giantswarm/microerror v0.2.0
+	github.com/giantswarm/micrologger v0.3.0
 	github.com/gogo/protobuf v1.3.1 // indirect
-	github.com/google/go-cmp v0.4.0 // indirect
 	github.com/googleapis/gnostic v0.3.1 // indirect
 	golang.org/x/crypto v0.0.0-20191206172530-e9b2fee46413 // indirect
 	golang.org/x/net v0.0.0-20191209160850-c0dbc17a3553 // indirect
