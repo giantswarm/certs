@@ -18,7 +18,7 @@ import (
 const (
 	// DefaultWatchTimeout is the time to wait on watches against the Kubernetes
 	// API before giving up and throwing an error.
-	DefaultWatchTimeout = 90 * time.Second
+	DefaultWatchTimeout = 3 * time.Second
 )
 
 type Config struct {
@@ -96,57 +96,6 @@ func (s *Searcher) SearchAppOperator(clusterID string) (AppOperator, error) {
 	}
 
 	return appOperator, nil
-}
-
-func (s *Searcher) SearchCluster(clusterID string) (Cluster, error) {
-	var cluster Cluster
-
-	certificates := []struct {
-		TLS      *TLS
-		Cert     Cert
-		optional bool
-	}{
-		{TLS: &cluster.APIServer, Cert: APICert},
-		{TLS: &cluster.CalicoEtcdClient, Cert: CalicoEtcdClientCert, optional: true},
-		{TLS: &cluster.EtcdServer, Cert: EtcdCert},
-		{TLS: &cluster.ServiceAccount, Cert: ServiceAccountCert},
-		{TLS: &cluster.Worker, Cert: WorkerCert},
-	}
-
-	g := &errgroup.Group{}
-	m := sync.Mutex{}
-
-	for _, certificate := range certificates {
-		c := certificate
-
-		g.Go(func() error {
-			secret, err := s.search(c.TLS, clusterID, c.Cert)
-			if err != nil {
-				if c.optional {
-					s.logger.Log("level", "warning", "message", err.Error())
-					return nil
-				} else {
-					return microerror.Mask(err)
-				}
-			}
-
-			m.Lock()
-			defer m.Unlock()
-			err = fillTLSFromSecret(c.TLS, secret, clusterID, c.Cert)
-			if err != nil {
-				return microerror.Mask(err)
-			}
-
-			return nil
-		})
-	}
-
-	err := g.Wait()
-	if err != nil {
-		return Cluster{}, microerror.Mask(err)
-	}
-
-	return cluster, nil
 }
 
 func (s *Searcher) SearchClusterOperator(clusterID string) (ClusterOperator, error) {
@@ -289,13 +238,13 @@ func (s *Searcher) SearchTLS(clusterID string, cert Cert) (TLS, error) {
 }
 
 func (s *Searcher) search(tls *TLS, clusterID string, cert Cert) (*corev1.Secret, error) {
-	// Select only secrets that match the given certificate and the given
-	// cluster clusterID.
-	selector := fmt.Sprintf("%s=%s, %s=%s", legacyCertificateLabel, cert, legacyClusterIDLabel, clusterID)
+	// Select only secrets that match the given certificate and the given cluster
+	// ID.
+	o := metav1.ListOptions{
+		LabelSelector: fmt.Sprintf("%s=%s, %s=%s", certificateLabel, cert, clusterLabel, clusterID),
+	}
 
-	watcher, err := s.k8sClient.CoreV1().Secrets(SecretNamespace).Watch(metav1.ListOptions{
-		LabelSelector: selector,
-	})
+	watcher, err := s.k8sClient.CoreV1().Secrets(SecretNamespace).Watch(o)
 	if err != nil {
 		return nil, microerror.Mask(err)
 	}
@@ -306,7 +255,7 @@ func (s *Searcher) search(tls *TLS, clusterID string, cert Cert) (*corev1.Secret
 		select {
 		case event, ok := <-watcher.ResultChan():
 			if !ok {
-				return nil, microerror.Maskf(executionFailedError, "watching secrets, selector = %q: unexpected closed channel", selector)
+				return nil, microerror.Maskf(executionFailedError, "watching secrets, selector = %q: unexpected closed channel", o.LabelSelector)
 			}
 
 			switch event.Type {
@@ -321,33 +270,40 @@ func (s *Searcher) search(tls *TLS, clusterID string, cert Cert) (*corev1.Secret
 				// Noop. Ignore deleted events. These are
 				// handled by the certificate operator.
 			case watch.Error:
-				return nil, microerror.Maskf(executionFailedError, "watching secrets, selector = %q: %v", selector, apierrors.FromObject(event.Object))
+				return nil, microerror.Maskf(executionFailedError, "watching secrets, selector = %q: %v", o.LabelSelector, apierrors.FromObject(event.Object))
 			}
 		case <-time.After(s.watchTimeout):
-			return nil, microerror.Maskf(timeoutError, "waiting secrets, selector = %q", selector)
+			return nil, microerror.Maskf(timeoutError, "waiting secrets, selector = %q", o.LabelSelector)
 		}
 	}
 }
 
-func fillTLSFromSecret(tls *TLS, secret *corev1.Secret, clusterID string, cert Cert) error {
-	gotClusterID := secret.Labels[legacyClusterIDLabel]
-	if clusterID != gotClusterID {
-		return microerror.Maskf(invalidSecretError, "expected clusterID = %q, got %q", clusterID, gotClusterID)
-	}
-	gotcert := secret.Labels[legacyCertificateLabel]
-	if string(cert) != gotcert {
-		return microerror.Maskf(invalidSecretError, "expected certificate = %q, got %q", cert, gotcert)
+func fillTLSFromSecret(tls *TLS, secret *corev1.Secret, cluster string, cert Cert) error {
+	{
+		var l string
+
+		l = secret.Labels[clusterLabel]
+		if cluster != l {
+			return microerror.Maskf(invalidSecretError, "expected cluster = %q, got %q", cluster, l)
+		}
+		l = secret.Labels[certificateLabel]
+		if string(cert) != l {
+			return microerror.Maskf(invalidSecretError, "expected certificate = %q, got %q", cert, l)
+		}
 	}
 
-	var ok bool
-	if tls.CA, ok = secret.Data["ca"]; !ok {
-		return microerror.Maskf(invalidSecretError, "%q key missing", "ca")
-	}
-	if tls.Crt, ok = secret.Data["crt"]; !ok {
-		return microerror.Maskf(invalidSecretError, "%q key missing", "crt")
-	}
-	if tls.Key, ok = secret.Data["key"]; !ok {
-		return microerror.Maskf(invalidSecretError, "%q key missing", "key")
+	{
+		var ok bool
+
+		if tls.CA, ok = secret.Data["ca"]; !ok {
+			return microerror.Maskf(invalidSecretError, "%q key missing", "ca")
+		}
+		if tls.Crt, ok = secret.Data["crt"]; !ok {
+			return microerror.Maskf(invalidSecretError, "%q key missing", "crt")
+		}
+		if tls.Key, ok = secret.Data["key"]; !ok {
+			return microerror.Maskf(invalidSecretError, "%q key missing", "key")
+		}
 	}
 
 	return nil
