@@ -1,13 +1,14 @@
 package certs
 
-// Cert is a certificate name.
+// Cert refers to a component we generate a certificate for.
 type Cert string
 
 func (c Cert) String() string {
 	return string(c)
 }
 
-// These constants used as Cert parsing a secret received from the API.
+// These constants are used as components identifying the purpose of generated
+// certificates.
 const (
 	APICert                Cert = "api"
 	AppOperatorAPICert     Cert = "app-operator-api"
@@ -25,22 +26,3 @@ const (
 	ServiceAccountCert     Cert = "service-account"
 	WorkerCert             Cert = "worker"
 )
-
-// AllCerts lists all certificates that can be created by cert-operator.
-var AllCerts = []Cert{
-	APICert,
-	AppOperatorAPICert,
-	AWSOperatorAPICert,
-	CalicoEtcdClientCert,
-	ClusterOperatorAPICert,
-	EtcdCert,
-	Etcd1Cert,
-	Etcd2Cert,
-	Etcd3Cert,
-	FlanneldEtcdClientCert,
-	InternalAPICert,
-	NodeOperatorCert,
-	PrometheusCert,
-	ServiceAccountCert,
-	WorkerCert,
-}
