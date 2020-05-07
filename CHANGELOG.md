@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Modify certs searching for HA Masters.
+- Prepare project structure for new major release.
 
 
 
