@@ -7,7 +7,6 @@ import (
 type Config struct {
 	AppOperator          certs.AppOperator
 	AppOperatorError     error
-	Cluster              certs.Cluster
 	ClusterError         error
 	ClusterOperator      certs.ClusterOperator
 	ClusterOperatorError error
@@ -22,8 +21,6 @@ type Config struct {
 type Searcher struct {
 	appOperator          certs.AppOperator
 	appOperatorError     error
-	cluster              certs.Cluster
-	clusterError         error
 	clusterOperator      certs.ClusterOperator
 	clusterOperatorError error
 	draining             certs.Draining
@@ -38,8 +35,6 @@ func NewSearcher(config Config) *Searcher {
 	return &Searcher{
 		appOperator:          config.AppOperator,
 		appOperatorError:     config.AppOperatorError,
-		cluster:              config.Cluster,
-		clusterError:         config.ClusterError,
 		clusterOperator:      config.ClusterOperator,
 		clusterOperatorError: config.ClusterOperatorError,
 		draining:             config.Draining,
@@ -57,14 +52,6 @@ func (s *Searcher) SearchAppOperator(clusterID string) (certs.AppOperator, error
 	}
 
 	return s.appOperator, nil
-}
-
-func (s *Searcher) SearchCluster(clusterID string) (certs.Cluster, error) {
-	if s.clusterError != nil {
-		return certs.Cluster{}, s.clusterError
-	}
-
-	return s.cluster, nil
 }
 
 func (s *Searcher) SearchClusterOperator(clusterID string) (certs.ClusterOperator, error) {
