@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+
+## [2.0.0] 2020-07-05
+
 ### Changed
 
 - Modify certs searching for HA Masters.
@@ -33,8 +37,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
-[Unreleased]: https://github.com/giantswarm/certs/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/giantswarm/certs/compare/v2.0.0...HEAD
 
+[2.0.0]: https://github.com/giantswarm/certs/compare/v0.2.0...v2.0.0
 [0.2.0]: https://github.com/giantswarm/certs/compare/v0.1.0...v0.2.0
 
 [0.1.0]: https://github.com/giantswarm/certs/releases/tag/v0.1.0
