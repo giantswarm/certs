@@ -1,7 +1,7 @@
 package certstest
 
 import (
-	"github.com/giantswarm/certs"
+	"github.com/giantswarm/certs/v2/pkg/certs"
 )
 
 type Config struct {
