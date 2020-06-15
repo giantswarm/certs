@@ -1,6 +1,8 @@
 package certstest
 
 import (
+	"github.com/giantswarm/microerror"
+
 	"github.com/giantswarm/certs/v2/pkg/certs"
 )
 
@@ -14,7 +16,7 @@ type Config struct {
 	DrainingError        error
 	Monitoring           certs.Monitoring
 	MonitoringError      error
-	TLS                  certs.TLS
+	TLS                  map[string]map[string]certs.TLS
 	TLSError             error
 }
 
@@ -27,7 +29,7 @@ type Searcher struct {
 	drainingError        error
 	monitoring           certs.Monitoring
 	monitoringError      error
-	tls                  certs.TLS
+	tls                  map[string]map[string]certs.TLS
 	tlsError             error
 }
 
@@ -83,5 +85,15 @@ func (s *Searcher) SearchTLS(clusterID string, cert certs.Cert) (certs.TLS, erro
 		return certs.TLS{}, s.tlsError
 	}
 
-	return s.tls, nil
+	cm, ok := s.tls[clusterID]
+	if !ok {
+		return certs.TLS{}, microerror.Mask(notFoundError)
+	}
+
+	tls, ok := cm[cert.String()]
+	if !ok {
+		return certs.TLS{}, microerror.Mask(notFoundError)
+	}
+
+	return tls, nil
 }
