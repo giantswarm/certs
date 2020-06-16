@@ -16,7 +16,7 @@ type Config struct {
 	DrainingError        error
 	Monitoring           certs.Monitoring
 	MonitoringError      error
-	TLS                  map[string]map[string]certs.TLS
+	TLS                  map[string]map[certs.Cert]certs.TLS
 	TLSError             error
 }
 
@@ -29,7 +29,7 @@ type Searcher struct {
 	drainingError        error
 	monitoring           certs.Monitoring
 	monitoringError      error
-	tls                  map[string]map[string]certs.TLS
+	tls                  map[string]map[certs.Cert]certs.TLS
 	tlsError             error
 }
 
@@ -90,7 +90,7 @@ func (s *Searcher) SearchTLS(clusterID string, cert certs.Cert) (certs.TLS, erro
 		return certs.TLS{}, microerror.Mask(notFoundError)
 	}
 
-	tls, ok := cm[cert.String()]
+	tls, ok := cm[cert]
 	if !ok {
 		return certs.TLS{}, microerror.Mask(notFoundError)
 	}
