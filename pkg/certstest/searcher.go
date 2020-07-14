@@ -1,6 +1,7 @@
 package certstest
 
 import (
+	"context"
 	"github.com/giantswarm/certs/v2/pkg/certs"
 )
 
@@ -46,7 +47,7 @@ func NewSearcher(config Config) *Searcher {
 	}
 }
 
-func (s *Searcher) SearchAppOperator(clusterID string) (certs.AppOperator, error) {
+func (s *Searcher) SearchAppOperator(ctx context.Context, clusterID string) (certs.AppOperator, error) {
 	if s.appOperatorError != nil {
 		return certs.AppOperator{}, s.appOperatorError
 	}
@@ -54,7 +55,7 @@ func (s *Searcher) SearchAppOperator(clusterID string) (certs.AppOperator, error
 	return s.appOperator, nil
 }
 
-func (s *Searcher) SearchClusterOperator(clusterID string) (certs.ClusterOperator, error) {
+func (s *Searcher) SearchClusterOperator(ctx context.Context, clusterID string) (certs.ClusterOperator, error) {
 	if s.clusterOperatorError != nil {
 		return certs.ClusterOperator{}, s.clusterOperatorError
 	}
@@ -62,7 +63,7 @@ func (s *Searcher) SearchClusterOperator(clusterID string) (certs.ClusterOperato
 	return s.clusterOperator, nil
 }
 
-func (s *Searcher) SearchDraining(clusterID string) (certs.Draining, error) {
+func (s *Searcher) SearchDraining(ctx context.Context, clusterID string) (certs.Draining, error) {
 	if s.drainingError != nil {
 		return certs.Draining{}, s.drainingError
 	}
@@ -70,7 +71,7 @@ func (s *Searcher) SearchDraining(clusterID string) (certs.Draining, error) {
 	return s.draining, nil
 }
 
-func (s *Searcher) SearchMonitoring(clusterID string) (certs.Monitoring, error) {
+func (s *Searcher) SearchMonitoring(ctx context.Context, clusterID string) (certs.Monitoring, error) {
 	if s.monitoringError != nil {
 		return certs.Monitoring{}, s.monitoringError
 	}
@@ -78,7 +79,7 @@ func (s *Searcher) SearchMonitoring(clusterID string) (certs.Monitoring, error) 
 	return s.monitoring, nil
 }
 
-func (s *Searcher) SearchTLS(clusterID string, cert certs.Cert) (certs.TLS, error) {
+func (s *Searcher) SearchTLS(ctx context.Context, clusterID string, cert certs.Cert) (certs.TLS, error) {
 	if s.tlsError != nil {
 		return certs.TLS{}, s.tlsError
 	}
