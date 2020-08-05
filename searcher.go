@@ -58,7 +58,7 @@ func NewSearcher(config Config) (*Searcher, error) {
 	return s, nil
 }
 
-func (s *Searcher) SearchAppOperator(clusterID string) (AppOperator, error) {
+func (s *Searcher) SearchAppOperator(ctx context.Context, clusterID string) (AppOperator, error) {
 	var appOperator AppOperator
 
 	certificates := []struct {
@@ -75,7 +75,7 @@ func (s *Searcher) SearchAppOperator(clusterID string) (AppOperator, error) {
 		c := certificate
 
 		g.Go(func() error {
-			secret, err := s.search(c.TLS, clusterID, c.Cert)
+			secret, err := s.search(ctx, c.TLS, clusterID, c.Cert)
 			if err != nil {
 				return microerror.Mask(err)
 			}
@@ -99,7 +99,7 @@ func (s *Searcher) SearchAppOperator(clusterID string) (AppOperator, error) {
 	return appOperator, nil
 }
 
-func (s *Searcher) SearchCluster(clusterID string) (Cluster, error) {
+func (s *Searcher) SearchCluster(ctx context.Context, clusterID string) (Cluster, error) {
 	var cluster Cluster
 
 	certificates := []struct {
@@ -121,7 +121,7 @@ func (s *Searcher) SearchCluster(clusterID string) (Cluster, error) {
 		c := certificate
 
 		g.Go(func() error {
-			secret, err := s.search(c.TLS, clusterID, c.Cert)
+			secret, err := s.search(ctx, c.TLS, clusterID, c.Cert)
 			if err != nil {
 				if c.optional {
 					s.logger.Log("level", "warning", "message", err.Error())
@@ -150,7 +150,7 @@ func (s *Searcher) SearchCluster(clusterID string) (Cluster, error) {
 	return cluster, nil
 }
 
-func (s *Searcher) SearchClusterOperator(clusterID string) (ClusterOperator, error) {
+func (s *Searcher) SearchClusterOperator(ctx context.Context, clusterID string) (ClusterOperator, error) {
 	var clusterOperator ClusterOperator
 
 	certificates := []struct {
@@ -167,7 +167,7 @@ func (s *Searcher) SearchClusterOperator(clusterID string) (ClusterOperator, err
 		c := certificate
 
 		g.Go(func() error {
-			secret, err := s.search(c.TLS, clusterID, c.Cert)
+			secret, err := s.search(ctx, c.TLS, clusterID, c.Cert)
 			if err != nil {
 				return microerror.Mask(err)
 			}
@@ -191,7 +191,7 @@ func (s *Searcher) SearchClusterOperator(clusterID string) (ClusterOperator, err
 	return clusterOperator, nil
 }
 
-func (s *Searcher) SearchDraining(clusterID string) (Draining, error) {
+func (s *Searcher) SearchDraining(ctx context.Context, clusterID string) (Draining, error) {
 	var draining Draining
 
 	certificates := []struct {
@@ -208,7 +208,7 @@ func (s *Searcher) SearchDraining(clusterID string) (Draining, error) {
 		c := certificate
 
 		g.Go(func() error {
-			secret, err := s.search(c.TLS, clusterID, c.Cert)
+			secret, err := s.search(ctx, c.TLS, clusterID, c.Cert)
 			if err != nil {
 				return microerror.Mask(err)
 			}
@@ -232,7 +232,7 @@ func (s *Searcher) SearchDraining(clusterID string) (Draining, error) {
 	return draining, nil
 }
 
-func (s *Searcher) SearchMonitoring(clusterID string) (Monitoring, error) {
+func (s *Searcher) SearchMonitoring(ctx context.Context, clusterID string) (Monitoring, error) {
 	var monitoring Monitoring
 
 	certificates := []struct {
@@ -249,7 +249,7 @@ func (s *Searcher) SearchMonitoring(clusterID string) (Monitoring, error) {
 		c := certificate
 
 		g.Go(func() error {
-			secret, err := s.search(c.TLS, clusterID, c.Cert)
+			secret, err := s.search(ctx, c.TLS, clusterID, c.Cert)
 			if err != nil {
 				return microerror.Mask(err)
 			}
@@ -273,10 +273,10 @@ func (s *Searcher) SearchMonitoring(clusterID string) (Monitoring, error) {
 	return monitoring, nil
 }
 
-func (s *Searcher) SearchTLS(clusterID string, cert Cert) (TLS, error) {
+func (s *Searcher) SearchTLS(ctx context.Context, clusterID string, cert Cert) (TLS, error) {
 	tls := &TLS{}
 
-	secret, err := s.search(tls, clusterID, cert)
+	secret, err := s.search(ctx, tls, clusterID, cert)
 	if err != nil {
 		return TLS{}, microerror.Mask(err)
 	}
@@ -289,9 +289,7 @@ func (s *Searcher) SearchTLS(clusterID string, cert Cert) (TLS, error) {
 	return *tls, nil
 }
 
-func (s *Searcher) search(tls *TLS, clusterID string, cert Cert) (*corev1.Secret, error) {
-	ctx := context.Background()
-
+func (s *Searcher) search(ctx context.Context, tls *TLS, clusterID string, cert Cert) (*corev1.Secret, error) {
 	// Select only secrets that match the given certificate and the given
 	// cluster clusterID.
 	selector := fmt.Sprintf("%s=%s, %s=%s", legacyCertificateLabel, cert, legacyClusterIDLabel, clusterID)
