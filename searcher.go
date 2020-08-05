@@ -1,6 +1,7 @@
 package certs
 
 import (
+	"context"
 	"fmt"
 	"sync"
 	"time"
@@ -289,11 +290,13 @@ func (s *Searcher) SearchTLS(clusterID string, cert Cert) (TLS, error) {
 }
 
 func (s *Searcher) search(tls *TLS, clusterID string, cert Cert) (*corev1.Secret, error) {
+	ctx := context.Background()
+
 	// Select only secrets that match the given certificate and the given
 	// cluster clusterID.
 	selector := fmt.Sprintf("%s=%s, %s=%s", legacyCertificateLabel, cert, legacyClusterIDLabel, clusterID)
 
-	watcher, err := s.k8sClient.CoreV1().Secrets(SecretNamespace).Watch(metav1.ListOptions{
+	watcher, err := s.k8sClient.CoreV1().Secrets(SecretNamespace).Watch(ctx, metav1.ListOptions{
 		LabelSelector: selector,
 	})
 	if err != nil {
