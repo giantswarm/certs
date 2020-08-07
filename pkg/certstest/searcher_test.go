@@ -3,7 +3,7 @@ package certstest
 import (
 	"testing"
 
-	"github.com/giantswarm/certs/v2/pkg/certs"
+	"github.com/giantswarm/certs/v3/pkg/certs"
 )
 
 func Test_CertsTest_NewSearcher(t *testing.T) {

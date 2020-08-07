@@ -3,7 +3,7 @@ package certstest
 import (
 	"context"
 
-	"github.com/giantswarm/certs/v2/pkg/certs"
+	"github.com/giantswarm/certs/v3/pkg/certs"
 )
 
 type Config struct {
