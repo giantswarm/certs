@@ -1,20 +1,22 @@
 package certs
 
+import "context"
+
 type Interface interface {
 	// SearchAppOperator searches for secrets containing TLS certs
 	// for managed catalogue service.
-	SearchAppOperator(clusterID string) (AppOperator, error)
+	SearchAppOperator(ctx context.Context, clusterID string) (AppOperator, error)
 	// SearchClusterOperator searches for secrets containing TLS certs for
 	// connecting to guest clusters.
-	SearchClusterOperator(clusterID string) (ClusterOperator, error)
+	SearchClusterOperator(ctx context.Context, clusterID string) (ClusterOperator, error)
 	// SearchDraining searches for secrets containing TLS certs for
 	// draining nodes in guest clusters.
-	SearchDraining(clusterID string) (Draining, error)
+	SearchDraining(ctx context.Context, clusterID string) (Draining, error)
 	// SearchMonitoring searches for secrets containing TLS certs for
 	// monitoring guest clusters.
-	SearchMonitoring(clusterID string) (Monitoring, error)
+	SearchMonitoring(ctx context.Context, clusterID string) (Monitoring, error)
 	// SearchTLS provides a dedicated way to lookup a single TLS asset for one
 	// specific purpose. This might be used for e.g. granting guest cluster
 	// access within operators.
-	SearchTLS(clusterID string, cert Cert) (TLS, error)
+	SearchTLS(ctx context.Context, clusterID string, cert Cert) (TLS, error)
 }
