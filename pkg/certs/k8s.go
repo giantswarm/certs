@@ -1,9 +1,14 @@
 package certs
 
-import "fmt"
+import (
+	"fmt"
+
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
 
 const (
-	SecretNamespace = "default"
+	// SecretNamespace is the namespace in which secrets are watched.
+	SecretNamespace = metav1.NamespaceAll
 )
 
 // These constants are used when filtering the secrets, to only retrieve the
