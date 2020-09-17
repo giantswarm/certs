@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added support for secrets in other namespaces than `default`.
+
 ## [3.0.0] - 2020-08-10
 
 ### Changed
