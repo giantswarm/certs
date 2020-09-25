@@ -23,6 +23,7 @@ const (
 	InternalAPICert        Cert = "internal-api"
 	NodeOperatorCert       Cert = "node-operator"
 	PrometheusCert         Cert = "prometheus"
+	PrometheusEtcdClient   Cert = "prometheus-etcd-client"
 	ServiceAccountCert     Cert = "service-account"
 	WorkerCert             Cert = "worker"
 )
