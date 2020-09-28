@@ -24,10 +24,14 @@ func Test_NewFilesCluster(t *testing.T) {
 		},
 		{
 			name:  "case 3",
-			files: NewFilesServiceAccount(TLS{}),
+			files: NewFilesPrometheusEtcdClient(TLS{}),
 		},
 		{
 			name:  "case 4",
+			files: NewFilesServiceAccount(TLS{}),
+		},
+		{
+			name:  "case 5",
 			files: NewFilesWorker(TLS{}),
 		},
 	}

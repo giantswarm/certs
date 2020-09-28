@@ -59,6 +59,24 @@ func NewFilesEtcd(cert TLS) []File {
 	}
 }
 
+func NewFilesPrometheusEtcdClient(cert TLS) []File {
+	return []File{
+		// Prometheus Etcd client.
+		{
+			AbsolutePath: "/etc/kubernetes/ssl/etcd/client-ca.pem",
+			Data:         cert.CA,
+		},
+		{
+			AbsolutePath: "/etc/kubernetes/ssl/etcd/client-crt.pem",
+			Data:         cert.Crt,
+		},
+		{
+			AbsolutePath: "/etc/kubernetes/ssl/etcd/client-key.pem",
+			Data:         cert.Key,
+		},
+	}
+}
+
 func NewFilesServiceAccount(cert TLS) []File {
 	return []File{
 		// Service account (only key file is used).

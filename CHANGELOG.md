@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added support for secrets in other namespaces than `default`.
+- Added etcd client certificates for Prometheus.
 
 ## [3.0.0] - 2020-08-10
 
