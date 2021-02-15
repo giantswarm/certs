@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Restore `AllCerts` list of `cert-operator`-managed certificates.
+
 ## [3.1.0] - 2020-09-28
 
 ### Added

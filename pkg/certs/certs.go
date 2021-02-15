@@ -27,3 +27,23 @@ const (
 	ServiceAccountCert       Cert = "service-account"
 	WorkerCert               Cert = "worker"
 )
+
+// AllCerts lists all certificates that can be created by cert-operator.
+var AllCerts = []Cert{
+	APICert,
+	AppOperatorAPICert,
+	AWSOperatorAPICert,
+	CalicoEtcdClientCert,
+	ClusterOperatorAPICert,
+	EtcdCert,
+	Etcd1Cert,
+	Etcd2Cert,
+	Etcd3Cert,
+	FlanneldEtcdClientCert,
+	InternalAPICert,
+	NodeOperatorCert,
+	PrometheusCert,
+	PrometheusEtcdClientCert,
+	ServiceAccountCert,
+	WorkerCert,
+}
