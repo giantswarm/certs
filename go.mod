@@ -1,4 +1,4 @@
-module github.com/giantswarm/certs/v3
+module github.com/giantswarm/certs/v4
 
 go 1.17
 
