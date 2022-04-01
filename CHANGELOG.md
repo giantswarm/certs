@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## Changed
+
+- Update go to 1.17
+- Update github.com/giantswarm/microerror to v0.4.0
+- Update  github.com/giantswarm/micrologger to v0.6.0
+- Update  golang.org/x/sync to v0.0.0-20210220032951-036812b2e83c
+- Update  k8s.io/api to v0.22.2
+- Update  k8s.io/apimachinery to v0.22.2
+- Update  k8s.io/client-go to v0.22.2
+- Update giantswarm/architect orb to v4.15.0
+
 ## [3.1.1] - 2021-02-17
 
 ### Fixed
