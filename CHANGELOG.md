@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update  k8s.io/api to v0.22.2
 - Update  k8s.io/apimachinery to v0.22.2
 - Update  k8s.io/client-go to v0.22.2
+- Update giantswarm/architect orb to v4.14.2
 
 ## [3.1.1] - 2021-02-17
 
