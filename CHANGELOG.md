@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.0.0] - 2022-04-01
+
 ## Changed
 
 - Update go to 1.17
@@ -65,7 +67,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
-[Unreleased]: https://github.com/giantswarm/certs/compare/v3.1.1...HEAD
+[Unreleased]: https://github.com/giantswarm/certs/compare/v4.0.0...HEAD
+[4.0.0]: https://github.com/giantswarm/certs/compare/v3.1.1...v4.0.0
 [3.1.1]: https://github.com/giantswarm/certs/compare/v3.1.0...v3.1.1
 [3.1.0]: https://github.com/giantswarm/certs/compare/v3.0.0...v3.1.0
 [3.0.0]: https://github.com/giantswarm/certs/compare/v2.0.0...v3.0.0
